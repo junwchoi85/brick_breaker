@@ -7,7 +7,7 @@ import 'package:flame/game.dart';
 import 'components/components.dart';
 import 'config.dart';
 
-class BrickBreaker extends FlameGame {
+class BrickBreaker extends FlameGame with HasCollisionDetection {
   BrickBreaker()
       : super(
           camera: CameraComponent.withFixedResolution(
@@ -16,7 +16,7 @@ class BrickBreaker extends FlameGame {
           ),
         );
 
-  final rand = math.Random();                                   // Add this variable
+  final rand = math.Random();
   double get width => size.x;
   double get height => size.y;
 
@@ -28,13 +28,13 @@ class BrickBreaker extends FlameGame {
 
     world.add(PlayArea());
 
-    world.add(Ball(                                             // Add from here...
+    world.add(Ball(
         radius: ballRadius,
         position: size / 2,
         velocity: Vector2((rand.nextDouble() - 0.5) * width, height * 0.2)
             .normalized()
           ..scale(height / 4)));
 
-    debugMode = true;                                           // To here.
+    debugMode = true;
   }
 }
