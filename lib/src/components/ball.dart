@@ -1,9 +1,12 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 
 import 'package:brick_breaker/src/brick_breaker.dart';
 import 'package:brick_breaker/src/components/play_area.dart';
+
+import 'bat.dart';
 
 class Ball extends CircleComponent
     with CollisionCallbacks, HasGameReference<BrickBreaker> {
@@ -28,7 +31,7 @@ class Ball extends CircleComponent
     position += velocity * dt;
   }
 
-  @override // Add from here...
+  @override
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
@@ -40,9 +43,15 @@ class Ball extends CircleComponent
       } else if (intersectionPoints.first.x >= game.width) {
         velocity.x = -velocity.x;
       } else if (intersectionPoints.first.y >= game.height) {
-        removeFromParent();
+        add(RemoveEffect(                                       // Modify from here...
+          delay: 0.35,
+        ));
       }
-    } else {
+    } else if (other is Bat) {
+      velocity.y = -velocity.y;
+      velocity.x = velocity.x +
+          (position.x - other.position.x) / other.size.x * game.width * 0.3;
+    } else {                                                    // To here.
       debugPrint('collision with $other');
     }
   }
